@@ -1,16 +1,43 @@
-# React + Vite
+# Zorvyn Fin 💸
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Hey there! Welcome to **Zorvyn Fin**. This is a personal finance dashboard I built to practice my React.js and frontend development skills. 
 
-Currently, two official plugins are available:
+The idea is simple: it's a web app where you can track your daily expenses, see your total income, and visualize your cash flow over time without things getting too complicated.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Features
 
-## React Compiler
+- **Live Dashboard:** Calculates your total balance, income, and expenses automatically. As soon as you add a transaction, the numbers update.
+- **Transaction Manager:** You can easily add, edit, or delete transactions using a clean modal form.
+- **Visual Charts:** - **Cash Flow Trend:** Shows your *running balance* over time (figuring out the cumulative sum logic for this was pretty fun!).
+  - **Spending by Category:** A simple pie chart to see where most of your money is going.
+- **Basic Role Access:** I added a dummy 'Admin' and 'Viewer' mode. Viewers can only look at the dashboard, while Admins get the buttons to add/delete stuff.
+- **Empty States:** If there's no data, the app doesn't just show blank white spaces; it shows nice placeholder messages.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack I Used
 
-## Expanding the ESLint configuration
+- **React.js** (Bootstrapped with Vite)
+- **Tailwind CSS** (For all the styling and making it responsive)
+- **Recharts** (For rendering the area and pie charts)
+- **Lucide React** (For the cool icons)
+- **Context API** (Used this for state management so I didn't have to pass props down 10 levels 😅)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 💻 How to run it locally
+
+If you want to check out the code and run it on your machine, just follow these steps:
+
+1. Clone the repo:
+   ```bash
+   git clone [https://github.com/golukr9876/zorvyn-fin-dashboard.git](https://github.com/golukr9876/zorvyn-fin-dashboard.git)
+   ```
+2. Open the folder
+   ```bash
+   cd zorvyn-fin-dashboard
+   ```
+3. Install the dependencies:
+   ```bash
+   npm run dev
+   ```
+4. Start the local dev server:
+   ```bash
+   npm run dev
+   ```
