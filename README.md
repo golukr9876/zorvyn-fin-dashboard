@@ -27,12 +27,16 @@ Unlike basic trackers, Zorvyn Fin calculates an **Opening Balance** for every mo
 - Uses `localStorage` to keep your data safe across sessions.
 - Includes **Security Error Handling** (try-catch blocks) to prevent crashes in private browsing or restricted environments.
 
-### 5. Dark Mode & UI/UX 🌙
+### 5. Data Export 📤
+- Export transaction data in **CSV** and **PDF** formats for easy reporting and sharing.
+- Generates clean, structured PDF reports using jsPDF.
+
+### 6. Dark Mode & UI/UX 🌙
 - Fully responsive design built with **Tailwind CSS**.
 - Beautifully crafted Dark Mode that adapts every component, including custom styled dropdowns and modals.
 - Smooth animations powered by **Framer Motion**.
 
-### 6. Role-Based Access Simulation (RBAC) 🔐
+### 7. Role-Based Access Simulation (RBAC) 🔐
 - Toggle between **Admin** (Full CRUD access) and **Viewer** (Read-only) to simulate real-world enterprise application permissions.
 
 ---

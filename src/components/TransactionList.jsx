@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useFinance } from '../context/FinanceContext';
-import { Search, ArrowUpDown, Plus, Edit2, Trash2, X, Receipt } from 'lucide-react';
+import { Download, Search, ArrowUpDown, Plus, Edit2, Trash2, X, Receipt, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const TransactionList = ({ transactions = [] }) => {
-  const {role, deleteTransaction, isLoading, addTransaction, updateTransaction } = useFinance();
+  const { role, deleteTransaction, isLoading, addTransaction, updateTransaction } = useFinance();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
@@ -19,6 +21,7 @@ const TransactionList = ({ transactions = [] }) => {
     amount: ''
   });
 
+  // 1. Memoized Data (Pehle ye define hoga)
   const filteredAndSortedTransactions = useMemo(() => {
     let result = [...transactions];
     if (searchTerm) {
@@ -36,6 +39,42 @@ const TransactionList = ({ transactions = [] }) => {
     });
     return result;
   }, [transactions, searchTerm, filterType, sortConfig]);
+
+  const exportToCSV = () => {
+    const headers = ["Date,Category,Type,Amount"];
+    const rows = filteredAndSortedTransactions.map(t => 
+      `${t.date},${t.category},${t.type},${t.amount}`
+    );
+    const csvContent = [headers, ...rows].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `Zorvyn_Fin_Transactions.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+     const tableColumn = ["Date", "Category", "Type", "Amount"];
+
+  const tableRows = filteredAndSortedTransactions.map(item => [
+    new Date(item.date).toLocaleDateString("en-IN"),
+    item.category,
+    item.type,
+    item.amount
+  ]);
+
+  autoTable(doc, {
+    head: [tableColumn],
+    body: tableRows,
+  });
+
+
+    doc.save("transactions.pdf");
+  };
 
   const openModal = (transaction = null) => {
     if (transaction) {
@@ -73,9 +112,9 @@ const TransactionList = ({ transactions = [] }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm mt-8 overflow-hidden transition-colors"
+      className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm mt-8 overflow-hidden transition-colors print:shadow-none print:border-none"
     >
-      <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 print:hidden">
         <h3 className="text-lg font-bold dark:text-white">Transactions History</h3>
         
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
@@ -96,29 +135,51 @@ const TransactionList = ({ transactions = [] }) => {
             <option value="income">Income</option>
             <option value="expense">Expense</option>
           </select>
-          {role === 'admin' && (
-            <button 
-              onClick={() => openModal()}
-              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-sm active:scale-95"
-            >
-              <Plus size={18} /> Add
-            </button>
-          )}
+
+          <div className="flex items-center gap-2">
+            {/* Split Button for Exports */}
+            <div className="flex items-center bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl overflow-hidden transition-all shadow-sm">
+              <button 
+                onClick={exportToCSV}
+                className="flex items-center gap-2 px-3 py-2 text-xs font-bold border-r border-emerald-500/50 hover:bg-emerald-700 transition-colors"
+                title="Export CSV"
+              >
+                <Download size={16} />
+                <span className="hidden lg:inline">CSV</span>
+              </button>
+              <button 
+                onClick={exportToPDF}
+                className="flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-emerald-700 transition-colors"
+                title="Export PDF"
+              >
+                <FileText size={16} />
+                <span className="hidden lg:inline">PDF</span>
+              </button>
+            </div>
+
+            {role === 'admin' && (
+              <button onClick={() => openModal()}
+                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-sm active:scale-95"
+              >
+                <Plus size={18} /> <span className="hidden sm:inline">Add</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
+      {/* Table Section */}
+      <div className="overflow-x-auto print:overflow-visible">
         <table className="w-full text-left">
           <thead>
             <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-gray-400 text-xs uppercase font-bold">
-              <th className="px-6 py-4 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400" onClick={() => setSortConfig({ key: 'date', direction: sortConfig.direction === 'asc' ? 'desc' : 'asc' })}>
-                Date <ArrowUpDown size={12} className="inline ml-1"/>
+              <th className="px-6 py-4 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 print:cursor-default" onClick={() => setSortConfig({ key: 'date', direction: sortConfig.direction === 'asc' ? 'desc' : 'asc' })}>
+                Date <ArrowUpDown size={12} className="inline ml-1 print:hidden"/>
               </th>
               <th className="px-6 py-4">Category</th>
               <th className="px-6 py-4 text-center">Type</th>
               <th className="px-6 py-4">Amount</th>
-              <th className="px-6 py-4 text-right">Actions</th>
+              <th className="px-6 py-4 text-right print:hidden">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
@@ -148,7 +209,7 @@ const TransactionList = ({ transactions = [] }) => {
                   <td className={`px-6 py-4 text-sm font-bold ${t.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>
                     {t.type === 'income' ? '+' : '-'}${t.amount.toLocaleString()}
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-right print:hidden">
                     {role === 'admin' ? (
                       <div className="flex justify-end gap-2">
                         <button onClick={() => openModal(t)} className="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all"><Edit2 size={16}/></button>
@@ -179,15 +240,17 @@ const TransactionList = ({ transactions = [] }) => {
           </tbody>
         </table>
       </div>
-      
+
+      {/* Modal - Print hide optimized */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm print:hidden"
           >
+            {/* ... Modal Content remains same ... */}
             <motion.div 
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
