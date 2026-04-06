@@ -5,8 +5,8 @@ import { BarChart3 } from 'lucide-react';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
-const CategoryChart = () => {
-  const { transactions, isDarkMode } = useFinance();
+const CategoryChart = ( { transactions = [] } ) => {
+  const { isDarkMode } = useFinance();
 
   const categoryData = transactions.reduce((acc, curr) => {
     const found = acc.find(item => item.name === curr.category);
@@ -17,8 +17,7 @@ const CategoryChart = () => {
     }
     return acc;
   }, []);
-
-  // Empty State handle
+  
   if (transactions.length === 0) {
     return (
       <div className="h-87.5 flex flex-col items-center justify-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-gray-300 dark:border-slate-700 text-gray-400 dark:text-gray-500 mt-8">

@@ -3,8 +3,8 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useFinance } from '../context/FinanceContext';
 import { BarChart3 } from 'lucide-react';
 
-const FinancialChart = () => {
-  const { transactions, isDarkMode } = useFinance();
+const FinancialChart = ({ transactions = [], openingBalance = 0 }) => {
+  const {isDarkMode } = useFinance();
 
   const chartData = useMemo(() => {
     if (transactions.length === 0) return [];
@@ -25,19 +25,44 @@ const FinancialChart = () => {
       }
     });
 
-    let runningBalance = 0;
-    const finalChartData = Object.keys(dailyNetChange).map(date => {
-      runningBalance += dailyNetChange[date]; 
-      return {
-        date: date,
-        amount: runningBalance 
-      };
+    let runningBalance = openingBalance;
+
+    const firstDateOfData = transactions.length > 0 
+      ? new Date(transactions[0].date) 
+      : new Date();
+    
+    const year = firstDateOfData.getFullYear();
+    const month = String(firstDateOfData.getMonth() + 1).padStart(2, '0');
+    const openingDateKey = `${year}-${month}-01`;
+
+    const finalChartData = [];
+
+    finalChartData.push({
+      date: '01', 
+      amount: runningBalance,
+      fullDate: openingDateKey
+    });
+
+    Object.keys(dailyNetChange).forEach(date => {
+      runningBalance += dailyNetChange[date];
+
+      const day = date.split('-')[2]; 
+      
+       if (day === '01') {
+        finalChartData[0].amount = runningBalance;
+      } else {
+        finalChartData.push({
+          date: day,
+          amount: runningBalance,
+          fullDate: date
+        });
+      }
     });
 
     return finalChartData;
   }, [transactions]);
 
-  if (transactions.length === 0) {
+  if (transactions.length === 0 && openingBalance === 0) {
     return (
       <div className="h-87.5 flex flex-col items-center justify-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-gray-300 dark:border-slate-700 text-gray-400 dark:text-gray-500 mt-8">
         <div className="flex flex-col items-center justify-center">
