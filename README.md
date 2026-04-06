@@ -1,31 +1,58 @@
 # Zorvyn Fin 💸
 
-Hey there! Welcome to **Zorvyn Fin**. This is a personal finance dashboard I built to practice my React.js and frontend development skills. 
+A professional-grade personal finance dashboard built to demonstrate advanced React patterns, state management, and complex data visualization.
 
-The idea is simple: it's a web app where you can track your daily expenses, see your total income, and visualize your cash flow over time without things getting too complicated.
+🚀 **Live Demo:** [https://zorvyn-fin-dashboard.vercel.app/](https://zorvyn-fin-dashboard.vercel.app/)
 
-## 🚀 Features
+---
 
-- **Live Dashboard:** Calculates your total balance, income, and expenses automatically. As soon as you add a transaction, the numbers update.
-- **Transaction Manager:** You can easily add, edit, or delete transactions using a clean modal form.
-- **Visual Charts:** - **Cash Flow Trend:** Shows your *running balance* over time (figuring out the cumulative sum logic for this was pretty fun!).
-  - **Spending by Category:** A simple pie chart to see where most of your money is going.
-- **Basic Role Access:** I added a dummy 'Admin' and 'Viewer' mode. Viewers can only look at the dashboard, while Admins get the buttons to add/delete stuff.
-- **Empty States:** If there's no data, the app doesn't just show blank white spaces; it shows nice placeholder messages.
+## 📖 About the Project
 
-## 🛠️ Tech Stack I Used
+**Zorvyn Fin** is a personal finance tracker designed for users who want a clean, minimalist, yet powerful way to manage their money. As a developer, I built this to master real-world challenges like **Data Persistence**, **Dynamic Filtering**, and **Cumulative Financial Logic**.
 
-- **React.js** (Bootstrapped with Vite)
-- **Tailwind CSS** (For all the styling and making it responsive)
-- **Recharts** (For rendering the area and pie charts)
-- **Lucide React** (For the cool icons)
-- **Context API** (Used this for state management so I didn't have to pass props down 10 levels 😅)
+## ✨ Key Features
 
-## 💻 How to run it locally
+### 1. Smart "Carry Forward" Logic 🧠
+Unlike basic trackers, Zorvyn Fin calculates an **Opening Balance** for every month. It looks at your entire transaction history to determine your net worth before the current month starts, ensuring your charts always reflect your true financial status.
 
-If you want to check out the code and run it on your machine, just follow these steps:
+### 2. Dynamic Monthly & Yearly Filtering 📅
+- Filter transactions by any Month or Year.
+- The Year selector is **fully dynamic**, automatically generating a range based on the current date—ensuring the app remains functional in 2027 and beyond without code changes.
 
-1. Clone the repo:
+### 3. Advanced Data Visualization 📈
+- **Cash Flow Trend:** An Area Chart using a `stepAfter` curve to visualize your running balance. It starts from the previous month's closing balance for 100% accuracy.
+- **Category Breakdown:** A Pie Chart to quickly identify spending leaks.
+
+### 4. Robust Data Persistence 💾
+- Uses `localStorage` to keep your data safe across sessions.
+- Includes **Security Error Handling** (try-catch blocks) to prevent crashes in private browsing or restricted environments.
+
+### 5. Dark Mode & UI/UX 🌙
+- Fully responsive design built with **Tailwind CSS**.
+- Beautifully crafted Dark Mode that adapts every component, including custom styled dropdowns and modals.
+- Smooth animations powered by **Framer Motion**.
+
+### 6. Role-Based Access Simulation (RBAC) 🔐
+- Toggle between **Admin** (Full CRUD access) and **Viewer** (Read-only) to simulate real-world enterprise application permissions.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Core:** React.js (Vite)
+- **State:** Context API (Clean state management without prop drilling)
+- **Styling:** Tailwind CSS
+- **Charts:** Recharts
+- **Icons:** Lucide React
+- **Animations:** Framer Motion
+
+---
+
+## 🚀 Local Installation
+
+Want to run this on your machine? Follow these steps:
+
+1. **Clone the Repository**
    ```bash
    git clone [https://github.com/golukr9876/zorvyn-fin-dashboard.git](https://github.com/golukr9876/zorvyn-fin-dashboard.git)
    ```
@@ -40,4 +67,3 @@ If you want to check out the code and run it on your machine, just follow these 
 4. Start the local dev server:
    ```bash
    npm run dev
-   ```
